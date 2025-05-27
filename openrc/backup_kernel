@@ -1,0 +1,54 @@
+#!/sbin/openrc-run
+# The Kernel Backer-Upper
+# Copyright 2025 Google LLC
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+description="Use a different modules directory when booting a backup kernel."
+
+depend()
+{
+	before udev
+}
+
+start() {
+	yesno $rc_verbose && verbose=yes
+
+	ebegin "Selecting modules directory"
+
+	if grep -E '(^| )BOOT_IMAGE=[^ ]*-backup_kernel ' /proc/cmdline; then
+		einfo "Mounting backup_kernel modules directory."
+		r=$(uname -r) && mkdir -p /lib/modules/"$r" && mount --bind -o ro /lib/modules/backup_kernel /lib/modules/"$r"
+	else
+		einfo "Keeping regular modules directory, nothing to do."
+	fi
+
+	eend $?
+}
+
+stop() {
+	yesno $rc_verbose && verbose=yes
+
+	ebegin "Deselecting modules directory"
+
+	if grep -E '(^| )BOOT_IMAGE=[^ ]*-backup_kernel ' /proc/cmdline; then
+		einfo "Unmounting backup_kernel modules directory."
+		r=$(uname -r) && umount /lib/modules/"$r" && rmdir --ignore-fail-on-non-empty /lib/modules/"$r"
+	else
+		einfo "Kept regular modules directory, nothing to do."
+	fi
+
+	eend $?
+}

@@ -1,0 +1,37 @@
+#!/bin/sh
+# The Kernel Backer-Upper
+# Copyright 2025 Google LLC
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+set -e
+
+case "$BOOT_IMAGE" in
+	*-backup_kernel)
+		echo >&2 "Mounting backup_kernel modules directory."
+		r=$(uname -r)
+		if ! mkdir -p /lib/modules/"$r"; then
+			mount / -o remount,rw
+			mkdir -p /lib/modules/"$r"
+			mount / -o remount,ro
+		fi
+		mount --bind -o ro /lib/modules/backup_kernel /lib/modules/"$r"
+		;;
+	*)
+		echo >&2 "Keeping regular modules directory, nothing to do."
+		;;
+esac
+
+exec "${backup_kernel_init:-/sbin/init}" "$@"
