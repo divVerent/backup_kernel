@@ -97,8 +97,15 @@ Then, to make a backup of the current kernel:
 root# ./backup-kernel.sh
 ```
 
+This will always overwrite your current kernel backup by the kernel
+currently running.
+
 On next boot, you can select the desired kernel, including the backup
 kernel.
+
+If support for multiple kernel backups is desired, please file a feature
+request issue - it should not be particularly hard to add, but is
+currently not a goal.
 
 ## Updating the System
 
