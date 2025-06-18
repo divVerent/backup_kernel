@@ -24,22 +24,33 @@ The init system can currently be:
 
 This software has been tested on the following distributions:
 
-| Distribution     | Boot Loader | Init System | Install Method       | Result                         |
-|------------------|-------------|-------------|----------------------|--------------------------------|
-| Alpine Linux     | GRUB        | openrc      | Service Integeration | OK                             |
-| Alpine Linux     | GRUB        | openrc      | Init System Wrapper  | OK                             |
-| Arch Linux       | GRUB        | systemd     | Service Integeration | OK                             |
-| Arch Linux       | GRUB        | systemd     | Init System Wrapper  | OK                             |
-| Debian GNU/Linux | GRUB        | systemd     | Service Integeration | OK (GRUB savedefault required) |
-| Debian GNU/Linux | GRUB        | systemd     | Init System Wrapper  | OK (GRUB savedefault required) |
+| Distribution     | Boot Loader  | Init System | Install Method       | Result                         |
+|------------------|--------------|-------------|----------------------|--------------------------------|
+| Alpine Linux     | GRUB         | openrc      | Service Integeration | OK                             |
+| Alpine Linux     | GRUB         | openrc      | Init System Wrapper  | OK                             |
+| Arch Linux       | GRUB         | systemd     | Service Integeration | OK                             |
+| Arch Linux       | GRUB         | systemd     | Init System Wrapper  | OK                             |
+| Debian GNU/Linux | GRUB         | systemd     | Service Integeration | OK (GRUB savedefault required) |
+| Debian GNU/Linux | GRUB         | systemd     | Init System Wrapper  | OK (GRUB savedefault required) |
+| Fedora Linux     | systemd-boot | systemd     | Service Integeration | OK (no boot entry)             |
+| Fedora Linux     | systemd-boot | systemd     | Init System Wrapper  | OK (no boot entry)             |
 
-When running on another system, please be prepared for fixing the boot
-process, especially directly after the first reboot after installation;
-it is possible that the service dependencies as set up in the files do
-not work on your system. You can usually get to a shell in which you can
-examine and fix the situation (or uninstall this software by using
-`uninstall.sh`) by appending ` init=/bin/sh` to your boot command line
-and running `mount / -o remount,rw` on the shell appearing from that.
+When running on another distribution, please be prepared for fixing the
+boot process, especially directly after the first reboot after
+installation; it is possible that the service dependencies as set up in
+the files do not work on your system. You can usually get to a shell in
+which you can examine and fix the situation (or uninstall this software
+by using `uninstall.sh`) by appending ` init=/bin/sh` to your boot
+command line and running `mount / -o remount,rw` on the shell appearing
+from that.
+
+On distributions listed as "no boot entry", the boot loader is not able
+to automatically detect the backup kernel, however it is easy to boot
+the backup kernel anyway:
+
+- systemd-boot: select the main boot entry, hit `e`, and replace both
+  places that contain the kernel version by `backup_kernel`, then boot
+  using `^X`.
 
 ## Installation (Service Integration)
 
