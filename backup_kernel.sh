@@ -110,7 +110,7 @@ save() {
 			# There may be simply some dangling symlinks.
 			if ! verbose cp --update=none -r "$1/." "$2"; then
 				# Older version of cp.
-				verbose cp --no-clobber -r "$1/." "$2"; then
+				verbose cp --no-clobber -r "$1/." "$2"
 			fi
 		fi
 	else
