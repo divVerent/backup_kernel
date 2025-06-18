@@ -62,7 +62,7 @@ case "${imagebase##*/}" in
 		;;
 esac
 found=false
-for initrd in "$imagedir"/initr*-"${imagebase#*-}"; do
+for initrd in "$imagedir"/initr*-"${imagebase#*-}"{,.img}; do
 	if [ -e "$initrd" ]; then
 		$found && fail "Multiple initramfs found for image $image."
 		found=true
