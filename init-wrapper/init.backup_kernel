@@ -18,6 +18,24 @@
 
 set -e
 
+# Parse kernel command line.
+# The variables may already be set.
+for opt in $(cat /proc/cmdline); do
+	case "$opt" in
+		*=*)
+			var=${opt%%=*}
+			value=${opt#*=}
+			case "$var" in
+				*.*)
+					;;
+				*)
+					eval "$var=\$value"
+					;;
+			esac
+			;;
+	esac
+done
+
 case "$BOOT_IMAGE" in
 	*-backup_kernel)
 		echo >&2 "Mounting backup_kernel modules directory."

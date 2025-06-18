@@ -33,7 +33,13 @@ for opt in $(cat /proc/cmdline); do
 		*=*)
 			var=${opt%%=*}
 			value=${opt#*=}
-			eval "$var=\$value"
+			case "$var" in
+				*.*)
+					;;
+				*)
+					eval "$var=\$value"
+					;;
+			esac
 			;;
 	esac
 done
