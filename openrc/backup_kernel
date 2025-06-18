@@ -20,7 +20,7 @@ description="Use a different modules directory when booting a backup kernel."
 
 depend()
 {
-	before udev
+	before modules udev
 }
 
 start() {
