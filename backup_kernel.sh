@@ -108,7 +108,10 @@ save() {
 		verbose mkdir -p "$2"
 		if ! verbose cp -Lr "$1/." "$2"; then
 			# There may be simply some dangling symlinks.
-			verbose cp --update=none -r "$1/." "$2"
+			if ! verbose cp --update=none -r "$1/." "$2"; then
+				# Older version of cp.
+				verbose cp --no-clobber -r "$1/." "$2"; then
+			fi
 		fi
 	else
 		verbose cp -L "$1" "$2"
