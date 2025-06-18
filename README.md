@@ -26,10 +26,12 @@ This software has been tested on the following distributions:
 
 | Distribution     | Boot Loader | Init System | Install Method       | Result                         |
 |------------------|-------------|-------------|----------------------|--------------------------------|
-| Debian GNU/Linux | GRUB        | systemd     | Service Integeration | OK (GRUB savedefault required) |
-| Debian GNU/Linux | GRUB        | systemd     | Init System Wrapper  | OK (GRUB savedefault required) |
 | Alpine Linux     | GRUB        | openrc      | Service Integeration | OK                             |
 | Alpine Linux     | GRUB        | openrc      | Init System Wrapper  | OK                             |
+| Arch Linux       | GRUB        | systemd     | Service Integeration | OK                             |
+| Arch Linux       | GRUB        | systemd     | Init System Wrapper  | OK                             |
+| Debian GNU/Linux | GRUB        | systemd     | Service Integeration | OK (GRUB savedefault required) |
+| Debian GNU/Linux | GRUB        | systemd     | Init System Wrapper  | OK (GRUB savedefault required) |
 
 When running on another system, please be prepared for fixing the boot
 process, especially directly after the first reboot after installation;
