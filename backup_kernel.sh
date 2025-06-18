@@ -113,7 +113,7 @@ for step in check save; do
 done
 
 # Step 3: reconfigure the boot loader.
-if which update-grub; then
+if which update-grub >/dev/null 2>&1; then
 	update-grub
 elif [ -f /boot/grub/grub.cfg ]; then
 	grub-mkconfig -o /boot/grub/grub.cfg
