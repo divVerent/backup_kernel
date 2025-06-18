@@ -43,19 +43,20 @@ for opt in $(cat /proc/cmdline); do
 			;;
 	esac
 done
-image=$BOOT_IMAGE
 
 # Locate the file system the image is likely on.
 found=false
 for prefix in /boot ''; do
-	if [ -e "$prefix$image" ]; then
-		$found && fail "Multiple files found for image $image."
-		found=true
-		break
-	fi
+	for image in "$BOOT_IMAGE" "/${BOOT_IMAGE#*/}" /"${BOOT_IMAGE#*/*/}"; do
+		image=$prefix$BOOT_IMAGE
+		if [ -e "$image" ]; then
+			$found && fail "Multiple files found for image $BOOT_IMAGE."
+			found=true
+			break
+		fi
+	done
 done
 $found || fail "Kernel image $image not found on file system."
-image=$prefix$image
 
 # Find the associated initrd/initramfs.
 imagedir=${image%/*}
@@ -68,7 +69,7 @@ case "${imagebase##*/}" in
 		;;
 esac
 found=false
-for initrd in "$imagedir"/initr*-"${imagebase#*-}"{,.img}; do
+for initrd in "$imagedir"/initr*-"${imagebase#*-}" "$imagedir"/initr*-"${imagebase#*-}".img; do
 	if [ -e "$initrd" ]; then
 		$found && fail "Multiple initramfs found for image $image."
 		found=true
