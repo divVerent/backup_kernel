@@ -113,4 +113,18 @@ for step in check save; do
 done
 
 # Step 3: reconfigure the boot loader.
-update-grub
+if which update-grub; then
+	update-grub
+elif [ -f /boot/grub/grub.cfg ]; then
+	grub-mkconfig -o /boot/grub/grub.cfg
+else
+	cat >&2 <<EOF
+
+Boot loader not detected.
+
+Please add the backup kernel to the boot loader configuration yourself!
+
+It is at:            $imagedir/vmlinuz-backup_kernel.
+Its initramfs is at: $imagedir/initrd-backup_kernel.
+EOF
+fi
