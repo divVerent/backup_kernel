@@ -47,8 +47,7 @@ done
 # Locate the file system the image is likely on.
 found=false
 for prefix in /boot ''; do
-	for image in "$BOOT_IMAGE" "/${BOOT_IMAGE#*/}" /"${BOOT_IMAGE#*/*/}"; do
-		image=$prefix$BOOT_IMAGE
+	for image in "$prefix$BOOT_IMAGE" "$prefix/${BOOT_IMAGE#*/}" "$prefix/${BOOT_IMAGE#*/*/}"; do
 		if [ -e "$image" ]; then
 			$found && fail "Multiple files found for image $BOOT_IMAGE."
 			found=true
