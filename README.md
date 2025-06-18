@@ -44,13 +44,34 @@ by using `uninstall.sh`) by appending ` init=/bin/sh` to your boot
 command line and running `mount / -o remount,rw` on the shell appearing
 from that.
 
+On distributions listed as "GRUB savedefault required", the boot loader
+would boot the backup kernel by default, which is undesired. Thus, run:
+
+``` sh
+root# vi /etc/default/grub
+```
+
+and add/update the following lines:
+
+``` sh
+GRUB_DEFAULT=saved
+GRUB_SAVEDEFAULT=true
+```
+
+Then finally, run:
+
+``` sh
+root# update-grub
+```
+
 On distributions listed as "no boot entry", the boot loader is not able
 to automatically detect the backup kernel, however it is easy to boot
 the backup kernel anyway:
 
 - systemd-boot: select the main boot entry, hit `e`, and replace both
-  places that contain the kernel version by `backup_kernel`, then boot
-  using `^X`.
+  places that contain the kernel version by `backup_kernel`. In case the
+  init system wrapper method of installation was used, also append
+  ` init=/sbin/init.backup_kernel`. Then boot using `^X`.
 
 ## Installation (Service Integration)
 
@@ -58,21 +79,6 @@ To install the init script support for backup kernels:
 
 ``` sh
 root# ./install.sh
-```
-
-Then, set up your boot loader to save the last selected kernel option
-(necessary as on some distributions, the backup kernel may otherwise
-become the default):
-
-``` sh
-root# vi /etc/default/grub
-```
-
-and add:
-
-``` sh
-GRUB_DEFAULT=saved
-GRUB_SAVEDEFAULT=true
 ```
 
 ## Installation (Init System Wrapper)
@@ -83,7 +89,7 @@ Instead, you can install this as an init wrapper:
 root# ./install.sh --init-wrapper
 ```
 
-And, as before, configure your boot loader:
+Also, configure your boot loader:
 
 ``` sh
 root# vi /etc/default/grub
@@ -94,8 +100,6 @@ append to it, if any):
 
 ``` sh
 GRUB_CMDLINE_LINUX="init=/sbin/init.backup_kernel"
-GRUB_DEFAULT=saved
-GRUB_SAVEDEFAULT=true
 ```
 
 This should work with every init system. In case your init system isn't
