@@ -54,6 +54,9 @@ for prefix in /boot ''; do
 			break
 		fi
 	done
+	if $found; then
+		break
+	fi
 done
 $found || fail "Kernel image $image not found on file system."
 
