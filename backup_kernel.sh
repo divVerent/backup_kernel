@@ -47,10 +47,12 @@ done
 # Locate the file system the image is likely on.
 found=false
 for prefix in /boot ''; do
-	for image in "$prefix$BOOT_IMAGE" "$prefix/${BOOT_IMAGE#*/}" "$prefix/${BOOT_IMAGE#*/*/}"; do
-		if [ -e "$image" ]; then
-			$found && fail "Multiple files found for image $BOOT_IMAGE."
+	for guess in "$prefix$BOOT_IMAGE" "$prefix/${BOOT_IMAGE#*/}" "$prefix/${BOOT_IMAGE#*/*/}"; do
+		[ x"$guess" = x"$image" ] && continue
+		if [ -e "$guess" ]; then
+			$found && fail "Multiple files found for image $BOOT_IMAGE: $image and $guess."
 			found=true
+			image=$guess
 			break
 		fi
 	done
@@ -71,10 +73,11 @@ case "${imagebase##*/}" in
 		;;
 esac
 found=false
-for initrd in "$imagedir"/initr*-"${imagebase#*-}" "$imagedir"/initr*-"${imagebase#*-}".img; do
-	if [ -e "$initrd" ]; then
-		$found && fail "Multiple initramfs found for image $image."
+for guess in "$imagedir"/initr*-"${imagebase#*-}" "$imagedir"/initr*-"${imagebase#*-}".img; do
+	if [ -e "$guess" ]; then
+		$found && fail "Multiple initramfs found for image $image: $initrd and $guess."
 		found=true
+		initrd=$guess
 		break
 	fi
 done
